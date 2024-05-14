@@ -1,13 +1,18 @@
+/**
+ *  主进程
+ */
 const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
-
+const si = require('systeminformation');
+si.system().then(data => console.log(data));
 const createWindow = () => {
     const win = new BrowserWindow({
+        title: "MonitorApp",
         width: 800,
         height: 600,
         // frame: false,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js') //预加载脚本
         }
     })
 
@@ -32,12 +37,12 @@ const createWindow = () => {
     const menuWithoutToolbar = Menu.buildFromTemplate([]);
 
     // 设置初始菜单为带有工具栏的菜单
-    win.setMenu(menuWithToolbar);
+    // win.setMenu(menuWithToolbar);
 
     // 在需要时切换菜单
     function toggleToolbar(showToolbar) {
         const menu = showToolbar ? menuWithToolbar : menuWithoutToolbar;
-        win.setMenu(menu);
+        // win.setMenu(menu);
     }
 
     // 示例：在某个事件触发时隐藏工具栏
@@ -45,7 +50,6 @@ const createWindow = () => {
         toggleToolbar(false); // 隐藏工具栏
     }, 5000);
     win.loadFile('index.html')
-    // win.loadFile('./dist/index.html')
 }
 
 app.whenReady().then(() => {

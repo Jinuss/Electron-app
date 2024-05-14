@@ -1,3 +1,10 @@
+const { contextBridge } = require('electron')
+
+contextBridge.exposeInMainWorld('electron', {
+    ipcRenderer: require('electron').ipcRenderer,
+    desktop: true
+})
+
 window.addEventListener('DOMContentLoaded', () => {
     console.log(process.versions)
     const replaceText = (selector, text) => {
