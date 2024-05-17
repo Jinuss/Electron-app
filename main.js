@@ -1,12 +1,14 @@
 /**
  *  主进程
  */
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const path = require('path');
 const si = require('systeminformation');
+
 si.system().then(data => console.log(data));
+let win
 const createWindow = () => {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
         title: "MonitorApp",
         width: 800,
         height: 600,
@@ -52,7 +54,16 @@ const createWindow = () => {
     win.loadFile('index.html')
 }
 
+const handleFileOpen = async () => {
+    const { canceled, filePaths } = await dialog.showOpenDialog()
+    if (!canceled) {
+        win.loadFile(filePaths[0])
+    }
+}
+
 app.whenReady().then(() => {
+    ipcMain.handle('dialog:openFile', handleFileOpen)
+
     createWindow()
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {

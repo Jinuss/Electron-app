@@ -1,8 +1,10 @@
-const { contextBridge } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('electron', {
     ipcRenderer: require('electron').ipcRenderer,
-    desktop: true
+    desktop: true,
+    openFile: () => ipcRenderer.invoke('dialog:openFile')
+    // 
 })
 
 window.addEventListener('DOMContentLoaded', () => {
